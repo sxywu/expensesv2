@@ -1,0 +1,366 @@
+[
+  {
+    "Type": "Fee",
+    "Trans Date": "06/18/2017",
+    "Post Date": "06/18/2017",
+    "Description": "PURCHASE INTEREST CHARGE",
+    "Amount": -12.45
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/15/2017",
+    "Post Date": "06/15/2017",
+    "Description": "SFMTA MOSCONE GARAGE",
+    "Amount": -2
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/15/2017",
+    "Post Date": "06/18/2017",
+    "Description": "SOCIAL POLICY",
+    "Amount": -13
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/15/2017",
+    "Post Date": "06/18/2017",
+    "Description": "BLOCK 2 PARKING LOT",
+    "Amount": -10
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/14/2017",
+    "Post Date": "06/16/2017",
+    "Description": "THE SANDWICH SHOP",
+    "Amount": -10.47
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/13/2017",
+    "Post Date": "06/14/2017",
+    "Description": "SQ *TIGER TEA &amp; JUICE",
+    "Amount": -3.53
+  },
+  {
+    "Type": "Payment",
+    "Trans Date": "06/12/2017",
+    "Post Date": "06/12/2017",
+    "Description": "Payment Thank You - Web",
+    "Amount": 1122.14
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/11/2017",
+    "Post Date": "06/12/2017",
+    "Description": "JAPAN CENTER GARAGE",
+    "Amount": -8.5
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/11/2017",
+    "Post Date": "06/12/2017",
+    "Description": "SQ *BOBA GUYS FILLMORE",
+    "Amount": -15.5
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/11/2017",
+    "Post Date": "06/13/2017",
+    "Description": "ON THE BRIDGE",
+    "Amount": -17.4
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/11/2017",
+    "Post Date": "06/12/2017",
+    "Description": "SQ *CHATO",
+    "Amount": -13.29
+  },
+  {
+    "Type": "Return",
+    "Trans Date": "06/11/2017",
+    "Post Date": "06/12/2017",
+    "Description": "SQ *BOBA GUYS FILLMORE",
+    "Amount": 4
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/10/2017",
+    "Post Date": "06/11/2017",
+    "Description": "CCSF MTA IPS PRKNG METER",
+    "Amount": -0.72
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/10/2017",
+    "Post Date": "06/12/2017",
+    "Description": "PICCINO",
+    "Amount": -34.69
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/10/2017",
+    "Post Date": "06/11/2017",
+    "Description": "SQ *AQUA CLUB",
+    "Amount": -14.03
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/09/2017",
+    "Post Date": "06/12/2017",
+    "Description": "PICCINO",
+    "Amount": -58.7
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/09/2017",
+    "Post Date": "06/11/2017",
+    "Description": "SFMTA MOSCONE GARAGE",
+    "Amount": -3
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/09/2017",
+    "Post Date": "06/11/2017",
+    "Description": "SFMTA MOSCONE GARAGE",
+    "Amount": -6
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/08/2017",
+    "Post Date": "06/08/2017",
+    "Description": "SFMTA MOSCONE GARAGE",
+    "Amount": -6
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/08/2017",
+    "Post Date": "06/09/2017",
+    "Description": "SQ *TIGER TEA &amp; JUICE",
+    "Amount": -4.62
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/08/2017",
+    "Post Date": "06/09/2017",
+    "Description": "SQ *TIGER TEA &amp; JUICE",
+    "Amount": -4.3
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/07/2017",
+    "Post Date": "06/08/2017",
+    "Description": "THE SANDWICH SHOP",
+    "Amount": -10.47
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/07/2017",
+    "Post Date": "06/08/2017",
+    "Description": "SQ *BOBA GUYS POTRERO",
+    "Amount": -15.45
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/06/2017",
+    "Post Date": "06/06/2017",
+    "Description": "SFMTA MOSCONE GARAGE",
+    "Amount": -8
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/05/2017",
+    "Post Date": "06/06/2017",
+    "Description": "SQ *ASHA TEA HOUSE (SF)",
+    "Amount": -8
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/05/2017",
+    "Post Date": "06/07/2017",
+    "Description": "DELTA AIR   0062385896060",
+    "Amount": -130.2
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/05/2017",
+    "Post Date": "06/07/2017",
+    "Description": "DELTA AIR   0062385896059",
+    "Amount": -130.2
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/04/2017",
+    "Post Date": "06/06/2017",
+    "Description": "IKEA EAST PALO ALTO",
+    "Amount": -2.74
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/04/2017",
+    "Post Date": "06/05/2017",
+    "Description": "THE REFUGE",
+    "Amount": -22.58
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/04/2017",
+    "Post Date": "06/04/2017",
+    "Description": "SQ *CREOLA BISTRO",
+    "Amount": -32.77
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "06/01/2017",
+    "Post Date": "06/02/2017",
+    "Description": "SANTA RAMEN",
+    "Amount": -15
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/30/2017",
+    "Post Date": "05/31/2017",
+    "Description": "SQ *POKE LAB FISH BAR",
+    "Amount": -11.69
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/30/2017",
+    "Post Date": "05/31/2017",
+    "Description": "SQ *TIGER TEA &amp; JUICE",
+    "Amount": -5.17
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/30/2017",
+    "Post Date": "05/31/2017",
+    "Description": "SQ *TIGER TEA &amp; JUICE",
+    "Amount": -5.17
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/30/2017",
+    "Post Date": "05/30/2017",
+    "Description": "GOOGLE *SVCSAPPS_00C23",
+    "Amount": -0.01
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/29/2017",
+    "Post Date": "05/30/2017",
+    "Description": "ICICLES",
+    "Amount": -15
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/28/2017",
+    "Post Date": "05/29/2017",
+    "Description": "SQ *BOBA GUYS POTRERO",
+    "Amount": -13.22
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/28/2017",
+    "Post Date": "05/28/2017",
+    "Description": "SQ *TIGER TEA &amp; JUICE",
+    "Amount": -10.33
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/27/2017",
+    "Post Date": "05/29/2017",
+    "Description": "Skool Restaurant",
+    "Amount": -84.35
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/27/2017",
+    "Post Date": "05/29/2017",
+    "Description": "SFMTA MOSCONE GARAGE",
+    "Amount": -7
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/26/2017",
+    "Post Date": "05/29/2017",
+    "Description": "FIREHOUSE NO 1",
+    "Amount": -57.26
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/24/2017",
+    "Post Date": "05/25/2017",
+    "Description": "SQ *TIGER TEA &amp; JUICE",
+    "Amount": -4.62
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/23/2017",
+    "Post Date": "05/23/2017",
+    "Description": "AIRBNB",
+    "Amount": -500
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/23/2017",
+    "Post Date": "05/23/2017",
+    "Description": "AIRBNB",
+    "Amount": -367
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/23/2017",
+    "Post Date": "05/25/2017",
+    "Description": "WETZEL'S PRETZELS",
+    "Amount": -6.2
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/23/2017",
+    "Post Date": "05/23/2017",
+    "Description": "SNOCREAM",
+    "Amount": -6.56
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/22/2017",
+    "Post Date": "05/24/2017",
+    "Description": "AMTRAK .COM 1420627110785",
+    "Amount": -84
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/21/2017",
+    "Post Date": "05/23/2017",
+    "Description": "FARMSTEAD",
+    "Amount": -38.28
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/20/2017",
+    "Post Date": "05/21/2017",
+    "Description": "SQ *MISSION HEIRLOOM",
+    "Amount": -49.71
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/20/2017",
+    "Post Date": "05/21/2017",
+    "Description": "MASSE'S PASTRIES",
+    "Amount": -16.5
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/20/2017",
+    "Post Date": "05/21/2017",
+    "Description": "SQ *CREATIVE NAIL SPA",
+    "Amount": -22
+  },
+  {
+    "Type": "Sale",
+    "Trans Date": "05/19/2017",
+    "Post Date": "05/21/2017",
+    "Description": "SQ *TIGER TEA &amp; JUICE",
+    "Amount": -4.62
+  }
+]

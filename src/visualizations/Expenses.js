@@ -5,7 +5,7 @@ import _ from 'lodash';
 import chroma from 'chroma-js';
 
 var height = 600;
-var margin = {left: 20, top: 20, right: 20, bottom: 20};
+var margin = {left: 40, top: 20, right: 40, bottom: 20};
 var radius = 7;
 
 // d3 functions
@@ -25,13 +25,13 @@ class App extends Component {
   constructor(props) {
     super(props);
 
+    this.state = {selectedWeek: null};
     this.forceTick = this.forceTick.bind(this);
   }
 
   componentWillMount() {
     xScale.range([margin.left, this.props.width - margin.right]);
-    simulation.force('center', d3.forceCenter(this.props.width / 2, height / 2))
-      .on('tick', this.forceTick);
+    simulation.on('tick', this.forceTick);
   }
 
   componentDidMount() {
@@ -51,15 +51,30 @@ class App extends Component {
     var weeksExtent = d3.extent(this.props.expenses,
       d => d3.timeWeek.floor(d.date));
     yScale.domain(weeksExtent);
-    console.log(weeksExtent)
+
+    var selectedWeek = weeksExtent[1];
+    var selectedWeekRadius = (this.props.width - margin.left - margin.right) / 2;
+
     this.expenses = _.chain(this.props.expenses)
       .groupBy(d => d3.timeWeek.floor(d.date))
       .map((expenses, week) => {
         week = new Date(week);
         return _.map(expenses, exp => {
+          var dayOfWeek = exp.date.getDay();
+          var focusX = xScale(dayOfWeek);
+          var focusY = yScale(week) + height;
+
+          if (week.getTime() === selectedWeek.getTime()) {
+            var perAngle = Math.PI / 6;
+            var angle = perAngle * dayOfWeek;
+
+            focusX = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;
+            focusY = selectedWeekRadius * Math.sin(angle) + margin.top;
+          }
+
           return Object.assign(exp, {
-            focusX: xScale(exp.date.getDay()),
-            focusY: yScale(week),
+            focusX,
+            focusY,
           });
         });
       }).flatten().value()
@@ -93,7 +108,7 @@ class App extends Component {
 
   render() {
     return (
-      <svg width={this.props.width} height={height} ref='container'>
+      <svg width={this.props.width} height={2 * height} ref='container'>
 
       </svg>
     );

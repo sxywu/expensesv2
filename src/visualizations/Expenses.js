@@ -9,7 +9,8 @@ var margin = {left: 40, top: 20, right: 40, bottom: 20};
 var radius = 7;
 
 // d3 functions
-var xScale = d3.scaleBand().domain([0, 1, 2, 3, 4, 5, 6]);
+var daysOfWeek = [[0, 'S'], [1, 'M'], [2, 'T'], [3, 'W'], [4, 'Th'], [5, 'F'], [6, 'S']];
+var xScale = d3.scaleBand().domain(_.map(daysOfWeek, 0));
 var yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
 var colorScale = chroma.scale(['#53cf8d', '#f7d283', '#e85151']);
 var amountScale = d3.scaleLog();
@@ -37,6 +38,7 @@ class App extends Component {
   componentDidMount() {
     this.container = d3.select(this.refs.container);
     this.calculateData();
+    this.renderDayCircles();
     this.renderCircles();
 
     simulation.nodes(this.props.expenses).alpha(0.9).restart();
@@ -53,7 +55,21 @@ class App extends Component {
     yScale.domain(weeksExtent);
 
     var selectedWeek = weeksExtent[1];
+    var perAngle = Math.PI / 6;
     var selectedWeekRadius = (this.props.width - margin.left - margin.right) / 2;
+
+    // circles for the back of each day in semi-circle
+    this.days = _.map(daysOfWeek, date => {
+      var [dayOfWeek, name] = date;
+      var angle = Math.PI - perAngle * dayOfWeek;
+      var x = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;
+      var y = selectedWeekRadius * Math.sin(angle) + margin.top;
+      return {
+        name,
+        x, y,
+      }
+    });
+    console.log(this.days)
 
     this.expenses = _.chain(this.props.expenses)
       .groupBy(d => d3.timeWeek.floor(d.date))
@@ -65,8 +81,7 @@ class App extends Component {
           var focusY = yScale(week) + height;
 
           if (week.getTime() === selectedWeek.getTime()) {
-            var perAngle = Math.PI / 6;
-            var angle = perAngle * dayOfWeek;
+            var angle = Math.PI - perAngle * dayOfWeek;
 
             focusX = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;
             focusY = selectedWeekRadius * Math.sin(angle) + margin.top;
@@ -85,7 +100,7 @@ class App extends Component {
 
   renderCircles() {
     // draw expenses circles
-    this.circles = this.container.selectAll('circle')
+    this.circles = this.container.selectAll('.expense')
       .data(this.expenses, d => d.name);
 
     // exit
@@ -93,12 +108,36 @@ class App extends Component {
 
     // enter+update
     this.circles = this.circles.enter().append('circle')
+      .classed('expense', true)
       .attr('r', radius)
       .attr('fill-opacity', 0.25)
       .attr('stroke-width', 3)
       .merge(this.circles)
       .attr('fill', d => colorScale(amountScale(d.amount)))
       .attr('stroke', d => colorScale(amountScale(d.amount)));
+  }
+
+  renderDayCircles() {
+    var days = this.container.selectAll('.day')
+      .data(this.days, d => d.name)
+      .enter().append('g')
+      .classed('day', true)
+      .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
+
+    var daysRadius = 80;
+    var fontSize = 12;
+    days.append('circle')
+      .attr('r', daysRadius)
+      .attr('fill', '#ccc')
+      .attr('opacity', 0.25);
+
+    days.append('text')
+      .attr('y', daysRadius + fontSize)
+      .attr('text-anchor', 'middle')
+      .attr('dy', '.35em')
+      .attr('fill', '#999')
+      .style('font-weight', 600)
+      .text(d => d.name);
   }
 
   forceTick() {

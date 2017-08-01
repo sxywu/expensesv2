@@ -38,7 +38,8 @@ class App extends Component {
   componentDidMount() {
     this.container = d3.select(this.refs.container);
     this.calculateData();
-    this.renderDayCircles();
+    this.renderWeeks();
+    this.renderDays();
     this.renderCircles();
 
     simulation.nodes(this.props.expenses).alpha(0.9).restart();
@@ -58,6 +59,17 @@ class App extends Component {
     var perAngle = Math.PI / 6;
     var selectedWeekRadius = (this.props.width - margin.left - margin.right) / 2;
 
+    // rectangle for each week
+    var weeks = d3.timeWeek.range(weeksExtent[0], d3.timeWeek.offset(weeksExtent[1], 1));
+    this.weeks = _.map(weeks, week => {
+      return {
+        week,
+        x: margin.left,
+        y: yScale(week) + height,
+      }
+    });
+    console.log(this.weeks)
+
     // circles for the back of each day in semi-circle
     this.days = _.map(daysOfWeek, date => {
       var [dayOfWeek, name] = date;
@@ -69,7 +81,6 @@ class App extends Component {
         x, y,
       }
     });
-    console.log(this.days)
 
     this.expenses = _.chain(this.props.expenses)
       .groupBy(d => d3.timeWeek.floor(d.date))
@@ -117,7 +128,7 @@ class App extends Component {
       .attr('stroke', d => colorScale(amountScale(d.amount)));
   }
 
-  renderDayCircles() {
+  renderDays() {
     var days = this.container.selectAll('.day')
       .data(this.days, d => d.name)
       .enter().append('g')
@@ -138,6 +149,28 @@ class App extends Component {
       .attr('fill', '#999')
       .style('font-weight', 600)
       .text(d => d.name);
+  }
+
+  renderWeeks() {
+    var weeks = this.container.selectAll('.week')
+      .data(this.weeks, d => d.name)
+      .enter().append('g')
+      .classed('week', true)
+      .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
+
+    var rectHeight = 10;
+    weeks.append('rect')
+      .attr('y', -rectHeight / 2)
+      .attr('width', this.props.width - margin.left - margin.right)
+      .attr('height', rectHeight)
+      .attr('fill', '#ccc')
+      .attr('opacity', 0.25);
+
+    var weekFormat = d3.timeFormat('%m/%d');
+    weeks.append('text')
+      .attr('text-anchor', 'end')
+      .attr('dy', '.35em')
+      .text(d => weekFormat(d.week))
   }
 
   forceTick() {

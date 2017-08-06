@@ -5,12 +5,12 @@ import _ from 'lodash';
 import chroma from 'chroma-js';
 
 var height = 600;
-var margin = {left: 40, top: 20, right: 40, bottom: 20};
+var margin = {left: 60, top: 20, right: 40, bottom: 20};
 var radius = 7;
 
 // d3 functions
 var daysOfWeek = [[0, 'S'], [1, 'M'], [2, 'T'], [3, 'W'], [4, 'Th'], [5, 'F'], [6, 'S']];
-var xScale = d3.scaleBand().domain(_.map(daysOfWeek, 0));
+var xScale = d3.scaleLinear().domain([0, 6]);
 var yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
 var colorScale = chroma.scale(['#53cf8d', '#f7d283', '#e85151']);
 var amountScale = d3.scaleLog();
@@ -172,6 +172,8 @@ class App extends Component {
     weeks.append('text')
       .attr('text-anchor', 'end')
       .attr('dy', '.35em')
+      .attr('fill', '#999')
+      .style('font-weight', 600)
       .text(d => weekFormat(d.week))
   }
 

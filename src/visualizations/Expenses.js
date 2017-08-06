@@ -22,6 +22,7 @@ var simulation = d3.forceSimulation()
   .force('x', d3.forceX(d => d.focusX))
   .force('y', d3.forceY(d => d.focusY))
   .stop();
+var drag = d3.drag();
 
 class App extends Component {
 
@@ -35,6 +36,9 @@ class App extends Component {
   componentWillMount() {
     xScale.range([margin.left, this.props.width - margin.right]);
     simulation.on('tick', this.forceTick);
+    drag.on('start', this.dragStart)
+      .on('drag', this.dragExpense)
+      .on('end', this.dragEnd);
   }
 
   componentDidMount() {
@@ -125,6 +129,7 @@ class App extends Component {
       .attr('r', radius)
       .attr('fill-opacity', 0.25)
       .attr('stroke-width', 3)
+      .call(drag)
       .merge(this.circles)
       .attr('fill', d => colorScale(amountScale(d.amount)))
       .attr('stroke', d => colorScale(amountScale(d.amount)));
@@ -180,6 +185,23 @@ class App extends Component {
   forceTick() {
     this.circles.attr('cx', d => d.x)
       .attr('cy', d => d.y);
+  }
+
+  dragStart() {
+    simulation.alphaTarget(0.3).restart();
+    d3.event.subject.fx = d3.event.subject.x;
+    d3.event.subject.fy = d3.event.subject.y;
+  }
+
+  dragExpense() {
+    d3.event.subject.fx = d3.event.x;
+    d3.event.subject.fy = d3.event.y;
+  }
+
+  dragEnd() {
+    if (!d3.event.active) simulation.alphaTarget(0);
+    d3.event.subject.fx = null;
+    d3.event.subject.fy = null;
   }
 
   render() {

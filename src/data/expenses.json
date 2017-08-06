@@ -1,12 +1,5 @@
 [
   {
-    "Type": "Fee",
-    "Trans Date": "06/18/2017",
-    "Post Date": "06/18/2017",
-    "Description": "PURCHASE INTEREST CHARGE",
-    "Amount": -12.45
-  },
-  {
     "Type": "Sale",
     "Trans Date": "06/15/2017",
     "Post Date": "06/15/2017",

@@ -3,10 +3,12 @@ import './App.css';
 import * as d3 from 'd3';
 import _ from 'lodash';
 import Expenses from './visualizations/Expenses';
+import Categories from './visualizations/Categories';
 
 import expensesData from './data/expenses.json';
 
 var width = 900;
+var height = 1800;
 
 class App extends Component {
 
@@ -64,7 +66,10 @@ class App extends Component {
         Week of {selectedWeek}
         <span onClick={this.nextWeek}>→</span>
         </h2>
-        <Expenses {...props} {...this.state} />
+        <svg width={width} height={height}>
+          <Expenses {...props} {...this.state} />
+          <Categories {...props} {...this.state} />
+        </svg>
       </div>
     );
   }

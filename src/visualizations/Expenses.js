@@ -184,9 +184,7 @@ class App extends Component {
 
   render() {
     return (
-      <svg width={this.props.width} height={2 * height} ref='container'>
-
-      </svg>
+      <g ref='container' />
     );
   }
 }

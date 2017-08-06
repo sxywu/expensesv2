@@ -15,6 +15,8 @@ var yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
 var colorScale = chroma.scale(['#53cf8d', '#f7d283', '#e85151']);
 var amountScale = d3.scaleLog();
 var simulation = d3.forceSimulation()
+  .alphaDecay(0.001)
+  .velocityDecay(0.3)
   // .force('charge', d3.forceManyBody(-10))
   .force('collide', d3.forceCollide(radius))
   .force('x', d3.forceX(d => d.focusX))
@@ -47,7 +49,9 @@ class App extends Component {
 
   componentDidUpdate() {
     this.calculateData();
-    // this.renderCircles();
+    this.renderCircles();
+
+    simulation.nodes(this.props.expenses).alpha(0.9).restart();
   }
 
   calculateData() {
@@ -55,7 +59,6 @@ class App extends Component {
       d => d3.timeWeek.floor(d.date));
     yScale.domain(weeksExtent);
 
-    var selectedWeek = weeksExtent[1];
     var perAngle = Math.PI / 6;
     var selectedWeekRadius = (this.props.width - margin.left - margin.right) / 2;
 
@@ -90,7 +93,7 @@ class App extends Component {
           var focusX = xScale(dayOfWeek);
           var focusY = yScale(week) + height;
 
-          if (week.getTime() === selectedWeek.getTime()) {
+          if (week.getTime() === this.props.selectedWeek.getTime()) {
             var angle = Math.PI - perAngle * dayOfWeek;
 
             focusX = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;

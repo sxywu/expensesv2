@@ -16,6 +16,9 @@ class App extends Component {
       expenses: [],
       selectedWeek: null,
     };
+
+    this.prevWeek = this.prevWeek.bind(this);
+    this.nextWeek = this.nextWeek.bind(this);
   }
 
   componentWillMount() {
@@ -34,6 +37,18 @@ class App extends Component {
     var selectedWeek = d3.max(expenses, exp => d3.timeWeek.floor(exp.date));
 
     this.setState({expenses, selectedWeek});
+  }
+
+  prevWeek() {
+    // todo: error handling
+    var selectedWeek = d3.timeWeek.offset(this.state.selectedWeek, -1);
+    this.setState({selectedWeek});
+  }
+
+  nextWeek() {
+    // todo: error handling
+    var selectedWeek = d3.timeWeek.offset(this.state.selectedWeek, 1);
+    this.setState({selectedWeek});
   }
 
   render() {

@@ -12,7 +12,10 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {expenses: []};
+    this.state = {
+      expenses: [],
+      selectedWeek: null,
+    };
   }
 
   componentWillMount() {
@@ -27,16 +30,27 @@ class App extends Component {
         }
       }).value();
 
-    this.setState({expenses});
+    // default selected week will be the most recent week
+    var selectedWeek = d3.max(expenses, exp => d3.timeWeek.floor(exp.date));
+
+    this.setState({expenses, selectedWeek});
   }
 
   render() {
     var props = {
       width,
     };
+    var selectedWeek = d3.timeFormat('%B %d, %Y')(this.state.selectedWeek);
 
     return (
-      <Expenses {...props} {...this.state} />
+      <div className='App'>
+        <h2>
+        <span onClick={this.prevWeek}>←</span>
+        Week of {selectedWeek}
+        <span onClick={this.nextWeek}>→</span>
+        </h2>
+        <Expenses {...props} {...this.state} />
+      </div>
     );
   }
 }

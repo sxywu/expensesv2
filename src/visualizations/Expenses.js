@@ -26,7 +26,7 @@ class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {selectedWeek: null};
+    this.state = {};
     this.forceTick = this.forceTick.bind(this);
   }
 
@@ -68,7 +68,6 @@ class App extends Component {
         y: yScale(week) + height,
       }
     });
-    console.log(this.weeks)
 
     // circles for the back of each day in semi-circle
     this.days = _.map(daysOfWeek, date => {

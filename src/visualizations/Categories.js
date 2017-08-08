@@ -33,13 +33,16 @@ class App extends Component {
   }
 
   componentDidUpdate() {
+    this.calculateData();
+    this.renderCircles();
 
+    simulation.nodes(this.props.categories).alpha(0.9).restart();
   }
 
   calculateData() {
     // calculate domain for radius (total $ amount of expenses)
     var radiusExtent = d3.extent(this.props.categories, category => category.total);
-    console.log(radiusExtent);
+    radiusScale.domain(radiusExtent);
 
     this.categories = _.map(this.props.categories, category => {
       return Object.assign(category, {

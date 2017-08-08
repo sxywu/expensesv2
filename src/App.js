@@ -26,6 +26,7 @@ class App extends Component {
     this.prevWeek = this.prevWeek.bind(this);
     this.nextWeek = this.nextWeek.bind(this);
     this.linkToCategory = this.linkToCategory.bind(this);
+    this.editDate = this.editDate.bind(this);
   }
 
   componentWillMount() {
@@ -68,6 +69,11 @@ class App extends Component {
     this.forceUpdate();
   }
 
+  editDate(expense, day) {
+    expense.date = day.date;
+    this.forceUpdate();
+  }
+
   render() {
     var selectedWeek = d3.timeFormat('%B %d, %Y')(this.state.selectedWeek);
     var links = [];
@@ -92,6 +98,7 @@ class App extends Component {
       width,
       links,
       linkToCategory: this.linkToCategory,
+      editDate: this.editDate,
     };
 
     return (

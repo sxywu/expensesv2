@@ -87,6 +87,8 @@ class App extends Component {
       var y = selectedWeekRadius * Math.sin(angle) + margin.top;
       return {
         name,
+        date: d3.timeDay.offset(this.props.selectedWeek, dayOfWeek),
+        radius: 80,
         x, y,
       }
     });
@@ -145,15 +147,14 @@ class App extends Component {
       .classed('day', true)
       .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
 
-    var daysRadius = 80;
     var fontSize = 12;
     days.append('circle')
-      .attr('r', daysRadius)
+      .attr('r', d => d.radius)
       .attr('fill', '#ccc')
       .attr('opacity', 0.25);
 
     days.append('text')
-      .attr('y', daysRadius + fontSize)
+      .attr('y', d => d.radius + fontSize)
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
       .attr('fill', '#999')
@@ -205,11 +206,20 @@ class App extends Component {
     var expense = d3.event.subject;
     var expenseX = d3.event.x;
     var expenseY = d3.event.y;
+    // go through all categories to see if overlapping
     _.each(this.props.categories, category => {
       var {x, y, radius} = category;
       if (x - radius < expenseX && expenseX < x + radius &&
         y - radius < expenseY && expenseY < y + radius) {
-          this.dragged = {expense, category};
+          this.dragged = {expense, category, type: 'category'};
+        }
+    });
+    // go through all the days to see if expense overlaps
+    _.each(this.days, day => {
+      var {x, y, radius} = day;
+      if (x - radius < expenseX && expenseX < x + radius &&
+        y - radius < expenseY && expenseY < y + radius) {
+          this.dragged = {expense, day, type: 'day'};
         }
     });
   }
@@ -219,9 +229,12 @@ class App extends Component {
     d3.event.subject.fx = null;
     d3.event.subject.fy = null;
 
-    if (this.dragged) {
+    if (this.dragged && this.dragged.type === 'category') {
       var {expense, category} = this.dragged;
       this.props.linkToCategory(expense, category);
+    } else if (this.dragged && this.dragged.type === 'day') {
+      var {expense, day} = this.dragged;
+      this.props.editDate(expense, day);
     }
     this.dragged = null;
   }

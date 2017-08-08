@@ -20,7 +20,6 @@ class App extends Component {
         {name: 'Groceries', expenses: [], total: 0},
         {name: 'Restaurants', expenses: [], total: 0},
       ],
-      links: [],
       selectedWeek: null,
     };
 
@@ -63,22 +62,30 @@ class App extends Component {
     category.expenses.push(expense);
     category.total = _.sumBy(category.expenses, 'amount');
 
-    // create link between expense + category
-    var links = this.state.links;
-    links.push({
-      source: expense,
-      target: category,
-    });
-
-    this.setState({links});
+    this.forceUpdate();
   }
 
   render() {
+    var selectedWeek = d3.timeFormat('%B %d, %Y')(this.state.selectedWeek);
+    var links = [];
+    _.each(this.state.categories, category => {
+      _.each(category.expenses, expense => {
+        // only when category's expense is in the selected week
+        if (d3.timeWeek.floor(expense.date).getTime() === this.state.selectedWeek.getTime()) {
+          // then we give it a visual link
+          links.push({
+            source: expense,
+            target: category,
+          })
+        }
+      });
+    });
+
     var props = {
       width,
+      links,
       linkToCategory: this.linkToCategory,
     };
-    var selectedWeek = d3.timeFormat('%B %d, %Y')(this.state.selectedWeek);
 
     return (
       <div className='App'>

@@ -31,6 +31,9 @@ class App extends Component {
 
     this.state = {};
     this.forceTick = this.forceTick.bind(this);
+    this.dragStart = this.dragStart.bind(this);
+    this.dragExpense = this.dragExpense.bind(this);
+    this.dragEnd = this.dragEnd.bind(this);
   }
 
   componentWillMount() {
@@ -194,14 +197,33 @@ class App extends Component {
   }
 
   dragExpense() {
+    this.dragged = null;
+
     d3.event.subject.fx = d3.event.x;
     d3.event.subject.fy = d3.event.y;
+
+    var expense = d3.event.subject;
+    var expenseX = d3.event.x;
+    var expenseY = d3.event.y;
+    _.each(this.props.categories, category => {
+      var {x, y, radius} = category;
+      if (x - radius / 2 < expenseX && expenseX < x + radius / 2 &&
+        y - radius / 2 < expenseY && expenseY < y + radius / 2) {
+          this.dragged = {expense, category};
+        }
+    });
   }
 
   dragEnd() {
     if (!d3.event.active) simulation.alphaTarget(0);
     d3.event.subject.fx = null;
     d3.event.subject.fy = null;
+
+    if (this.dragged) {
+      var {expense, category} = this.dragged;
+      this.props.linkToCategory(expense, category);
+    }
+    this.dragged = null;
   }
 
   render() {

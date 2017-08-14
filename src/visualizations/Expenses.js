@@ -55,6 +55,7 @@ class App extends Component {
 
   componentDidUpdate() {
     this.calculateData();
+    this.renderDays();
     this.renderCircles();
 
     simulation.nodes(this.props.expenses).alpha(0.9).restart();
@@ -68,7 +69,7 @@ class App extends Component {
     amountScale.domain(amountExtent);
 
     var perAngle = Math.PI / 6;
-    var selectedWeekRadius = (this.props.width - margin.left - margin.right) / 2;
+    var selectedWeekRadius = this.props.width * 0.3;
     this.days = _.groupBy(this.props.expenses, d => d3.timeDay.floor(d.date));
     var dayExtent = d3.extent(_.values(this.days),
       expenses => _.sumBy(expenses, d => d.amount));
@@ -91,7 +92,7 @@ class App extends Component {
         return {
           name: daysOfWeek[dayOfWeek],
           date,
-          radius: 60,
+          radius: 55,
           fill: colorScale(dayScale(_.sumBy(expenses, 'amount'))),
           x, y,
         };
@@ -143,25 +144,36 @@ class App extends Component {
 
   renderDays() {
     var days = this.container.selectAll('.day')
-      .data(this.days, d => d.name)
-      .enter().append('g')
-      .classed('day', true)
-      .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
+      .data(this.days, d => d.date);
 
-    var fontSize = 12;
-    days.append('circle')
-      .attr('r', d => d.radius)
-      .attr('fill', d => d.fill)
-      // .attr('stroke', d => d.fill)
+    // exit
+    days.exit().remove();
+
+    // enter
+    var enter = days.enter().append('g')
+      .classed('day', true);
+    enter.append('rect')
       .attr('fill-opacity', 0.5);
-
-    var timeFormat = d3.timeFormat('%m/%d');
-    days.append('text')
-      .attr('y', d => d.radius + fontSize)
+    enter.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
       .attr('fill', '#999')
-      .style('font-weight', 600)
+      .style('font-weight', 600);
+
+    days = enter.merge(days)
+      .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
+
+    days.select('rect')
+      .attr('width', d => 2 * d.radius)
+      .attr('height', d => 2 * d.radius)
+      .attr('x', d => -d.radius)
+      .attr('y', d => -d.radius)
+      .attr('fill', d => d.fill);
+
+    var fontSize = 12;
+    var timeFormat = d3.timeFormat('%m/%d');
+    days.select('text')
+      .attr('y', d => d.radius + fontSize)
       .text(d => timeFormat(d.date));
   }
 

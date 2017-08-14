@@ -6,19 +6,19 @@ import chroma from 'chroma-js';
 
 var height = 600;
 var margin = {left: 60, top: 20, right: 40, bottom: 20};
-var radius = 7;
+var radius = 5;
 
 // d3 functions
 var daysOfWeek = [[0, 'S'], [1, 'M'], [2, 'T'], [3, 'W'], [4, 'Th'], [5, 'F'], [6, 'S']];
 var xScale = d3.scaleLinear().domain([0, 6]);
 var yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
+var amountScale = d3.scaleLinear().range([radius, 4 * radius]);
 var colorScale = chroma.scale(['#53cf8d', '#f7d283', '#e85151']);
-var amountScale = d3.scaleLog();
 var simulation = d3.forceSimulation()
   .alphaDecay(0.001)
   .velocityDecay(0.3)
   // .force('charge', d3.forceManyBody(-10))
-  .force('collide', d3.forceCollide(radius))
+  .force('collide', d3.forceCollide(d => d.radius + 1))
   .force('x', d3.forceX(d => d.focusX))
   .force('y', d3.forceY(d => d.focusY))
   .stop();
@@ -65,6 +65,8 @@ class App extends Component {
     var weeksExtent = d3.extent(this.props.expenses,
       d => d3.timeWeek.floor(d.date));
     yScale.domain(weeksExtent);
+    var amountExtent = d3.extent(this.props.expenses, d => d.amount);
+    amountScale.domain(amountExtent);
 
     var perAngle = Math.PI / 6;
     var selectedWeekRadius = (this.props.width - margin.left - margin.right) / 2;
@@ -110,14 +112,12 @@ class App extends Component {
           }
 
           return Object.assign(exp, {
+            radius: amountScale(exp.amount),
             focusX,
             focusY,
           });
         });
       }).flatten().value()
-
-    var amountExtent = d3.extent(this.expenses, d => d.amount);
-    amountScale.domain(amountExtent);
   }
 
   renderCircles() {
@@ -131,13 +131,12 @@ class App extends Component {
     // enter+update
     this.circles = this.circles.enter().append('circle')
       .classed('expense', true)
-      .attr('r', radius)
-      .attr('fill-opacity', 0.25)
-      .attr('stroke-width', 3)
+      .attr('fill', '#fff')
+      .attr('stroke-width', 2)
+      .attr('stroke', '#999')
       .call(drag)
       .merge(this.circles)
-      .attr('fill', d => colorScale(amountScale(d.amount)))
-      .attr('stroke', d => colorScale(amountScale(d.amount)));
+      .attr('r', d => d.radius);
   }
 
   renderDays() {

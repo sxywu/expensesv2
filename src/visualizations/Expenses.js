@@ -4,8 +4,8 @@ import _ from 'lodash';
 
 import chroma from 'chroma-js';
 
-var height = 600;
-var margin = {left: 60, top: 20, right: 40, bottom: 20};
+var height = 650;
+var margin = {left: 40, top: 20, right: 40, bottom: 20};
 var radius = 5;
 
 // d3 functions
@@ -13,6 +13,7 @@ var daysOfWeek = ['S', 'M', 'T', 'W', 'Th', 'F', 'S'];
 var xScale = d3.scaleLinear().domain([0, 6]);
 var yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
 var amountScale = d3.scaleLinear().range([radius, 4 * radius]);
+var dayScale = d3.scaleLog();
 var colorScale = chroma.scale(['#53cf8d', '#f7d283', '#e85151']);
 var simulation = d3.forceSimulation()
   .alphaDecay(0.001)
@@ -68,9 +69,12 @@ class App extends Component {
 
     var perAngle = Math.PI / 6;
     var selectedWeekRadius = (this.props.width - margin.left - margin.right) / 2;
-    this.days = _.chain(this.props.expenses)
-      .groupBy(d => d3.timeDay.floor(d.date))
-      .map((expenses, date) => {
+    this.days = _.groupBy(this.props.expenses, d => d3.timeDay.floor(d.date));
+    var dayExtent = d3.extent(_.values(this.days),
+      expenses => _.sumBy(expenses, d => d.amount));
+    dayScale.domain(dayExtent);
+
+    this.days = _.map(this.days, (expenses, date) => {
         date = new Date(date);
         var dayOfWeek = date.getDay();
         var week = d3.timeWeek.floor(date);
@@ -87,10 +91,11 @@ class App extends Component {
         return {
           name: daysOfWeek[dayOfWeek],
           date,
-          radius: 50,
+          radius: 60,
+          fill: colorScale(dayScale(_.sumBy(expenses, 'amount'))),
           x, y,
         };
-      }).value();
+      });
     this.expenses = _.chain(this.props.expenses)
       .groupBy(d => d3.timeWeek.floor(d.date))
       .map((expenses, week) => {
@@ -130,7 +135,6 @@ class App extends Component {
     this.circles = this.circles.enter().append('circle')
       .classed('expense', true)
       .attr('fill', '#fff')
-      .attr('stroke-width', 1)
       .attr('stroke', '#999')
       .call(drag)
       .merge(this.circles)
@@ -147,8 +151,9 @@ class App extends Component {
     var fontSize = 12;
     days.append('circle')
       .attr('r', d => d.radius)
-      .attr('fill', '#ccc')
-      .attr('opacity', 0.25);
+      .attr('fill', d => d.fill)
+      // .attr('stroke', d => d.fill)
+      .attr('fill-opacity', 0.5);
 
     var timeFormat = d3.timeFormat('%m/%d');
     days.append('text')

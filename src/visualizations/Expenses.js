@@ -68,8 +68,8 @@ class App extends Component {
     var amountExtent = d3.extent(this.props.expenses, d => d.amount);
     amountScale.domain(amountExtent);
 
-    var perAngle = Math.PI / 6;
-    var selectedWeekRadius = this.props.width * 0.3;
+    var perAngle = Math.PI / 12;
+    var selectedWeekRadius = this.props.width * 0.55;
     this.days = _.groupBy(this.props.expenses, d => d3.timeDay.floor(d.date));
     var dayExtent = d3.extent(_.values(this.days),
       expenses => _.sumBy(expenses, d => d.amount));
@@ -83,7 +83,7 @@ class App extends Component {
         var y = yScale(week) + height;
 
         if (week.getTime() === this.props.selectedWeek.getTime()) {
-          var angle = Math.PI - perAngle * dayOfWeek;
+          var angle = 0.75 * Math.PI - perAngle * dayOfWeek;
 
           x = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;
           y = selectedWeekRadius * Math.sin(angle) + margin.top;
@@ -107,7 +107,7 @@ class App extends Component {
           var focusY = yScale(week) + height;
 
           if (week.getTime() === this.props.selectedWeek.getTime()) {
-            var angle = Math.PI - perAngle * dayOfWeek;
+            var angle = 0.75 * Math.PI - perAngle * dayOfWeek;
 
             focusX = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;
             focusY = selectedWeekRadius * Math.sin(angle) + margin.top;

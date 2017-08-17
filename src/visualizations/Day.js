@@ -55,16 +55,10 @@ class Day extends Component {
     // get min+max total amounts per day
     var totalsExtent = d3.extent(_.values(this.totalsByDay));
     amountScale.domain(totalsExtent);
-    // get min+max dates
-    var [minDate, maxDate] = d3.extent(this.props.expenses,
-      d => d3.timeDay.floor(d.date));
 
-    this.backs = _.map(d3.timeDay.range(minDate, maxDate), (date) => {
-      return this.calculateDayPosition(date);
-    });
     this.days = _.map(this.totalsByDay, (total, date) => {
       date = new Date(date);
-      var {x, y} = this.calculateDayPosition(date);
+      var {x, y} = this.calculateDayPosition(date, true);
 
       return {
         date,
@@ -72,15 +66,32 @@ class Day extends Component {
         x, y,
       };
     });
+
+    // get min+max dates
+    var [minDate, maxDate] = d3.extent(this.props.expenses,
+      d => d3.timeDay.floor(d.date));
+    // minDate = d3.timeWeek.floor(minDate);
+    // maxDate = d3.timeWeek.ceil(maxDate)
+    // backs should be all dates in range as well as an extra for selectedWeek
+    var selectedWeek = d3.timeDay.range(this.props.selectedWeek,
+      d3.timeWeek.offset(this.props.selectedWeek, 1));
+    this.backs = _.chain(selectedWeek)
+      .map(date => this.calculateDayPosition(date, true))
+      .union(_.map(d3.timeDay.range(minDate, maxDate),
+        (date) => this.calculateDayPosition(date)))
+      .value();
   }
 
-  calculateDayPosition(date, ) {
+  calculateDayPosition(date, shouldSelectedWeekCurve) {
     var dayOfWeek = date.getDay();
     var week = d3.timeWeek.floor(date);
     var x = xScale(dayOfWeek);
-    var y = yScale(week) + height;
+    var y = yScale(week) + height + 2 * dayHeight;
 
-    if (week.getTime() === this.props.selectedWeek.getTime()) {
+    if (shouldSelectedWeekCurve &&
+      week.getTime() === this.props.selectedWeek.getTime()) {
+      var offset = Math.abs(3 - dayOfWeek);
+      y = height - 2 * dayHeight - 0.5 * offset * dayHeight;
     }
 
     return {x, y};

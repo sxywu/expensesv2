@@ -12,7 +12,7 @@ var white = '#fff8fa';
 var daysOfWeek = ['S', 'M', 'T', 'W', 'Th', 'F', 'S'];
 var xScale = d3.scaleLinear().domain([0, 6]);
 var yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
-var dayScale = d3.scaleLog();
+var amountScale = d3.scaleLog();
 var colorScale = chroma.scale(['#53c3ac', '#f7e883', '#e85178']);
 
 class Day extends Component {
@@ -45,34 +45,42 @@ class Day extends Component {
 
     var perAngle = Math.PI / 12;
     var selectedWeekRadius = this.props.width * 0.55;
-    this.days = _.groupBy(this.props.expenses, d => d3.timeDay.floor(d.date));
-    var dayExtent = d3.extent(_.values(this.days),
-      expenses => _.sumBy(expenses, d => d.amount));
-    dayScale.domain(dayExtent);
+    this.totalsByDay = _.chain(this.props.expenses)
+      .groupBy(d => d3.timeDay.floor(d.date))
+      .reduce((obj, expenses, date) => {
+        obj[date] = _.sumBy(expenses, 'amount');
+        return obj;
+      }, {}).value();
+    // get min+max total amounts per day
+    var totalsExtent = d3.extent(_.values(this.totalsByDay));
+    amountScale.domain(totalsExtent);
+    // get min+max dates
+    var [minDate, maxDate] = d3.extent(this.props.expenses,
+      d => d3.timeDay.floor(d.date));
 
-    this.days = _.map(this.days, (expenses, date) => {
-        date = new Date(date);
-        var dayOfWeek = date.getDay();
-        var week = d3.timeWeek.floor(date);
-        var x = xScale(dayOfWeek);
-        var y = yScale(week) + height;
+    this.days = _.map(d3.timeDay.range(minDate, maxDate), (date) => {
+      var total = this.totalsByDay[date] || 1;
+      var dayOfWeek = date.getDay();
+      var week = d3.timeWeek.floor(date);
+      var x = xScale(dayOfWeek);
+      var y = yScale(week) + height;
 
-        if (week.getTime() === this.props.selectedWeek.getTime()) {
-          var angle = 0.75 * Math.PI - perAngle * dayOfWeek;
+      if (week.getTime() === this.props.selectedWeek.getTime()) {
+        var angle = 0.75 * Math.PI - perAngle * dayOfWeek;
 
-          x = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;
-          y = selectedWeekRadius * Math.sin(angle) + margin.top;
-        }
+        x = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;
+        y = selectedWeekRadius * Math.sin(angle) + margin.top;
+      }
 
-        return {
-          name: daysOfWeek[dayOfWeek],
-          date,
-          width: 55,
-          height: 75,
-          fill: colorScale(dayScale(_.sumBy(expenses, 'amount'))),
-          x, y,
-        };
-      });
+      return {
+        name: daysOfWeek[dayOfWeek],
+        date,
+        width: 55,
+        height: 75,
+        fill: colorScale(amountScale(total)),
+        x, y,
+      };
+    });
   }
 
   renderDays() {

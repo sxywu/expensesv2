@@ -3,6 +3,7 @@ import './App.css';
 import * as d3 from 'd3';
 import _ from 'lodash';
 import Expenses from './visualizations/Expenses';
+import Day from './visualizations/Day';
 import Categories from './visualizations/Categories';
 
 import expensesData from './data/expenses.json';
@@ -110,7 +111,8 @@ class App extends Component {
           Week of {selectedWeek}
           <span onClick={this.nextWeek}> →</span>
         </h2>
-        <svg width={width} height={height}>
+        <svg style={{overflow: 'visible'}} width={width} height={height}>
+          <Day {...props} {...this.state} />
           <Categories {...props} {...this.state} />
           <Expenses {...props} {...this.state} />
         </svg>

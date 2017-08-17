@@ -14,11 +14,11 @@ var xScale = d3.scaleLinear().domain([0, 6]);
 var yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
 var amountScale = d3.scaleLinear().range([radius, 4 * radius]);
 var dayScale = d3.scaleLog();
-var colorScale = chroma.scale(['#53cf8d', '#f7d283', '#e85151']);
+var colorScale = chroma.scale(['#53c3ac', '#f7e883', '#e85178']);
 var simulation = d3.forceSimulation()
   .alphaDecay(0.001)
   .velocityDecay(0.3)
-  .force('collide', d3.forceCollide(d => d.radius + 1))
+  .force('collide', d3.forceCollide(d => d.radius + 2))
   .force('x', d3.forceX(d => d.focusX))
   .force('y', d3.forceY(d => d.focusY))
   .stop();
@@ -135,8 +135,7 @@ class App extends Component {
     // enter+update
     this.circles = this.circles.enter().append('circle')
       .classed('expense', true)
-      .attr('fill', '#fff')
-      .attr('stroke', '#999')
+      .attr('fill', '#fff8fa')
       .call(drag)
       .merge(this.circles)
       .attr('r', d => d.radius);
@@ -153,7 +152,7 @@ class App extends Component {
     var enter = days.enter().append('g')
       .classed('day', true);
     enter.append('rect')
-      .attr('fill-opacity', 0.5);
+      // .attr('fill-opacity', 0.75);
     enter.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')

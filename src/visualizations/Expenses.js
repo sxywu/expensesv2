@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import _ from 'lodash';
 
 var height = 650;
+var dayHeight = 75;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
 var radius = 5;
 var white = '#fff8fa';
@@ -70,14 +71,13 @@ class App extends Component {
         week = new Date(week);
         return _.map(expenses, exp => {
           var dayOfWeek = exp.date.getDay();
+          var week = d3.timeWeek.floor(exp.date);
           var focusX = xScale(dayOfWeek);
-          var focusY = yScale(week) + height;
+          var focusY = yScale(week) + height + 2 * dayHeight;
 
           if (week.getTime() === this.props.selectedWeek.getTime()) {
-            var angle = 0.75 * Math.PI - perAngle * dayOfWeek;
-
-            focusX = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;
-            focusY = selectedWeekRadius * Math.sin(angle) + margin.top;
+            var offset = Math.abs(3 - dayOfWeek);
+            focusY = height - 2 * dayHeight - 0.5 * offset * dayHeight;
           }
 
           return Object.assign(exp, {

@@ -3,6 +3,7 @@ import * as d3 from 'd3';
 import _ from 'lodash';
 
 var height = 650;
+var dayWidth = 55;
 var dayHeight = 75;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
 var radius = 5;
@@ -70,25 +71,44 @@ class App extends Component {
       .map((expenses, week) => {
         week = new Date(week);
         return _.map(expenses, exp => {
-          var dayOfWeek = exp.date.getDay();
-          var week = d3.timeWeek.floor(exp.date);
-          var focusX = xScale(dayOfWeek);
-          var focusY = yScale(week) + height + 2 * dayHeight;
-
-          if (week.getTime() === this.props.selectedWeek.getTime()) {
-            var offset = Math.abs(3 - dayOfWeek);
-            focusY = height - 2 * dayHeight - 0.5 * offset * dayHeight;
-          }
+          var {x, y} = this.calculateDayPosition(exp.date, true);
 
           return Object.assign(exp, {
             radius: amountScale(exp.amount),
-            focusX,
-            focusY,
-            x: exp.x || focusX,
-            y: exp.y || focusY,
+            focusX: x,
+            focusY: y,
+            x: exp.x || x,
+            y: exp.y || y,
           });
         });
       }).flatten().value()
+
+    // get min+max dates
+    var [minDate, maxDate] = d3.extent(this.props.expenses,
+      d => d3.timeDay.floor(d.date));
+    // calculate all potential dates to drag expenses into
+    var selectedWeek = d3.timeDay.range(this.props.selectedWeek,
+      d3.timeWeek.offset(this.props.selectedWeek, 1));
+    this.days = _.chain(selectedWeek)
+      .map(date => Object.assign(this.calculateDayPosition(date, true), {date}))
+      .union(_.map(d3.timeDay.range(minDate, maxDate),
+        (date) => Object.assign(this.calculateDayPosition(date), {date})))
+      .value();
+  }
+
+  calculateDayPosition(date, shouldSelectedWeekCurve) {
+    var dayOfWeek = date.getDay();
+    var week = d3.timeWeek.floor(date);
+    var x = xScale(dayOfWeek);
+    var y = yScale(week) + height + 2 * dayHeight;
+
+    if (shouldSelectedWeekCurve &&
+      week.getTime() === this.props.selectedWeek.getTime()) {
+      var offset = Math.abs(3 - dayOfWeek);
+      y = height - 2 * dayHeight - 0.5 * offset * dayHeight;
+    }
+
+    return {x, y};
   }
 
   renderCircles() {
@@ -139,8 +159,8 @@ class App extends Component {
     // go through all the days to see if expense overlaps
     _.each(this.days, day => {
       var {x, y, radius} = day;
-      if (x - radius < expenseX && expenseX < x + radius &&
-        y - radius < expenseY && expenseY < y + radius) {
+      if (x - dayWidth < expenseX && expenseX < x + dayWidth &&
+        y - dayHeight < expenseY && expenseY < y + dayHeight) {
           this.dragged = {expense, day, type: 'day'};
         }
     });

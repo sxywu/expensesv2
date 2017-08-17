@@ -142,6 +142,7 @@ class App extends Component {
   }
 
   renderDays() {
+    var t = d3.transition().duration(500);
     var days = this.container.selectAll('.day')
       .data(this.days, d => d.date);
 
@@ -150,7 +151,8 @@ class App extends Component {
 
     // enter
     var enter = days.enter().append('g')
-      .classed('day', true);
+      .classed('day', true)
+      .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
     enter.append('rect')
       // .attr('fill-opacity', 0.75);
     enter.append('text')
@@ -159,7 +161,9 @@ class App extends Component {
       .attr('fill', '#999')
       .style('font-weight', 600);
 
-    days = enter.merge(days)
+    days = enter.merge(days);
+    days.transition(t)
+      .delay((d, i) => d.date.getDay() * 50)
       .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
 
     days.select('rect')
@@ -167,6 +171,7 @@ class App extends Component {
       .attr('height', d => 2 * d.radius)
       .attr('x', d => -d.radius)
       .attr('y', d => -d.radius)
+      .transition(t)
       .attr('fill', d => d.fill);
 
     var fontSize = 12;

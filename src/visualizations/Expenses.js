@@ -64,8 +64,6 @@ class App extends Component {
     var amountExtent = d3.extent(this.props.expenses, d => d.amount);
     amountScale.domain(amountExtent);
 
-    var perAngle = Math.PI / 12;
-    var selectedWeekRadius = this.props.width * 0.55;
     this.expenses = _.chain(this.props.expenses)
       .groupBy(d => d3.timeWeek.floor(d.date))
       .map((expenses, week) => {
@@ -158,7 +156,7 @@ class App extends Component {
     });
     // go through all the days to see if expense overlaps
     _.each(this.days, day => {
-      var {x, y, radius} = day;
+      var {x, y} = day;
       if (x - dayWidth < expenseX && expenseX < x + dayWidth &&
         y - dayHeight < expenseY && expenseY < y + dayHeight) {
           this.dragged = {expense, day, type: 'day'};
@@ -171,12 +169,13 @@ class App extends Component {
     d3.event.subject.fx = null;
     d3.event.subject.fy = null;
 
-    if (this.dragged && this.dragged.type === 'category') {
-      var {expense, category} = this.dragged;
-      this.props.linkToCategory(expense, category);
-    } else if (this.dragged && this.dragged.type === 'day') {
-      var {expense, day} = this.dragged;
-      this.props.editDate(expense, day);
+    if (this.dragged) {
+      var {expense, category, day} = this.dragged;
+      if (this.dragged.type === 'category') {
+        this.props.linkToCategory(expense, category);
+      } else if (this.dragged.type === 'day') {
+        this.props.editDate(expense, day);
+      }
     }
     this.dragged = null;
   }

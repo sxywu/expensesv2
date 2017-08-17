@@ -10,9 +10,7 @@ var simulation = d3.forceSimulation()
   .force('x', d3.forceX(d => d.focusX))
   .force('y', d3.forceY(d => d.focusY))
   .stop();
-
 var height = 600;
-var margin = {left: 60, top: 20, right: 40, bottom: 20};
 
 class App extends Component {
 

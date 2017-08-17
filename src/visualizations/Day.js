@@ -9,7 +9,6 @@ var dayWidth = 55;
 var dayHeight = 75;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
 var white = '#fff8fa';
-var daysOfWeek = ['S', 'M', 'T', 'W', 'Th', 'F', 'S'];
 
 // d3 functions
 var xScale = d3.scaleLinear().domain([0, 6]);
@@ -96,7 +95,7 @@ class Day extends Component {
   }
 
   renderBacks() {
-    var backs = this.container.selectAll('.back')
+    this.container.selectAll('.back')
       .data(this.backs, d => d.date)
       .enter().insert('rect', '.day')
       .classed('back', true)

@@ -5,11 +5,13 @@ import _ from 'lodash';
 import chroma from 'chroma-js';
 
 var height = 650;
+var dayWidth = 55;
+var dayHeight = 75;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
 var white = '#fff8fa';
+var daysOfWeek = ['S', 'M', 'T', 'W', 'Th', 'F', 'S'];
 
 // d3 functions
-var daysOfWeek = ['S', 'M', 'T', 'W', 'Th', 'F', 'S'];
 var xScale = d3.scaleLinear().domain([0, 6]);
 var yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
 var amountScale = d3.scaleLog();
@@ -30,6 +32,7 @@ class Day extends Component {
   componentDidMount() {
     this.container = d3.select(this.refs.container);
     this.calculateData();
+    this.renderBacks();
     this.renderDays();
   }
 
@@ -43,8 +46,6 @@ class Day extends Component {
       d => d3.timeWeek.floor(d.date));
     yScale.domain(weeksExtent);
 
-    var perAngle = Math.PI / 12;
-    var selectedWeekRadius = this.props.width * 0.55;
     this.totalsByDay = _.chain(this.props.expenses)
       .groupBy(d => d3.timeDay.floor(d.date))
       .reduce((obj, expenses, date) => {
@@ -58,29 +59,44 @@ class Day extends Component {
     var [minDate, maxDate] = d3.extent(this.props.expenses,
       d => d3.timeDay.floor(d.date));
 
-    this.days = _.map(d3.timeDay.range(minDate, maxDate), (date) => {
-      var total = this.totalsByDay[date] || 1;
-      var dayOfWeek = date.getDay();
-      var week = d3.timeWeek.floor(date);
-      var x = xScale(dayOfWeek);
-      var y = yScale(week) + height;
-
-      if (week.getTime() === this.props.selectedWeek.getTime()) {
-        var angle = 0.75 * Math.PI - perAngle * dayOfWeek;
-
-        x = selectedWeekRadius * Math.cos(angle) + this.props.width / 2;
-        y = selectedWeekRadius * Math.sin(angle) + margin.top;
-      }
+    this.backs = _.map(d3.timeDay.range(minDate, maxDate), (date) => {
+      return this.calculateDayPosition(date);
+    });
+    this.days = _.map(this.totalsByDay, (total, date) => {
+      date = new Date(date);
+      var {x, y} = this.calculateDayPosition(date);
 
       return {
-        name: daysOfWeek[dayOfWeek],
         date,
-        width: 55,
-        height: 75,
         fill: colorScale(amountScale(total)),
         x, y,
       };
     });
+  }
+
+  calculateDayPosition(date, ) {
+    var dayOfWeek = date.getDay();
+    var week = d3.timeWeek.floor(date);
+    var x = xScale(dayOfWeek);
+    var y = yScale(week) + height;
+
+    if (week.getTime() === this.props.selectedWeek.getTime()) {
+    }
+
+    return {x, y};
+  }
+
+  renderBacks() {
+    var backs = this.container.selectAll('.back')
+      .data(this.backs, d => d.date)
+      .enter().insert('rect', '.day')
+      .classed('back', true)
+      .attr('transform', d => 'translate(' + [d.x, d.y] + ')')
+      .attr('width', 2 * dayWidth)
+      .attr('height', 2 * dayHeight)
+      .attr('x', -dayWidth)
+      .attr('y', -dayHeight)
+      .attr('fill', '#e1ecea');
   }
 
   renderDays() {
@@ -112,16 +128,16 @@ class Day extends Component {
       .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
 
     days.select('rect')
-      .attr('width', d => 2 * d.width)
-      .attr('height', d => 2 * d.height)
-      .attr('x', d => -d.width)
-      .attr('y', d => -d.height)
+      .attr('width', 2 * dayWidth)
+      .attr('height', 2 * dayHeight)
+      .attr('x', -dayWidth)
+      .attr('y', -dayHeight)
       .transition(t)
       .attr('fill', d => d.fill);
 
     var timeFormat = d3.timeFormat('%m/%d');
     days.select('text')
-      .attr('y', d => d.height - 0.75 * fontSize)
+      .attr('y', d => dayHeight - 0.75 * fontSize)
       .text(d => timeFormat(d.date));
   }
 

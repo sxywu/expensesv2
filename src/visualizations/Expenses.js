@@ -7,6 +7,7 @@ import chroma from 'chroma-js';
 var height = 650;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
 var radius = 5;
+var white = '#fff8fa';
 
 // d3 functions
 var daysOfWeek = ['S', 'M', 'T', 'W', 'Th', 'F', 'S'];
@@ -92,7 +93,8 @@ class App extends Component {
         return {
           name: daysOfWeek[dayOfWeek],
           date,
-          radius: 55,
+          width: 55,
+          height: 75,
           fill: colorScale(dayScale(_.sumBy(expenses, 'amount'))),
           x, y,
         };
@@ -135,7 +137,7 @@ class App extends Component {
     // enter+update
     this.circles = this.circles.enter().append('circle')
       .classed('expense', true)
-      .attr('fill', '#fff8fa')
+      .attr('fill', white)
       .call(drag)
       .merge(this.circles)
       .attr('r', d => d.radius);
@@ -143,6 +145,8 @@ class App extends Component {
 
   renderDays() {
     var t = d3.transition().duration(500);
+    var fontSize = 20;
+
     var days = this.container.selectAll('.day')
       .data(this.days, d => d.date);
 
@@ -158,8 +162,9 @@ class App extends Component {
     enter.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
-      .attr('fill', '#999')
-      .style('font-weight', 600);
+      .attr('fill', white)
+      .style('font-family', 'CatMule Caps')
+      .style('font-size', fontSize);
 
     days = enter.merge(days);
     days.transition(t)
@@ -167,17 +172,16 @@ class App extends Component {
       .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
 
     days.select('rect')
-      .attr('width', d => 2 * d.radius)
-      .attr('height', d => 2 * d.radius)
-      .attr('x', d => -d.radius)
-      .attr('y', d => -d.radius)
+      .attr('width', d => 2 * d.width)
+      .attr('height', d => 2 * d.height)
+      .attr('x', d => -d.width)
+      .attr('y', d => -d.height)
       .transition(t)
       .attr('fill', d => d.fill);
 
-    var fontSize = 12;
     var timeFormat = d3.timeFormat('%m/%d');
     days.select('text')
-      .attr('y', d => d.radius + fontSize)
+      .attr('y', d => d.height - 0.75 * fontSize)
       .text(d => timeFormat(d.date));
   }
 

@@ -70,8 +70,6 @@ class Day extends Component {
     // get min+max dates
     var [minDate, maxDate] = d3.extent(this.props.expenses,
       d => d3.timeDay.floor(d.date));
-    // minDate = d3.timeWeek.floor(minDate);
-    // maxDate = d3.timeWeek.ceil(maxDate)
     // backs should be all dates in range as well as an extra for selectedWeek
     var selectedWeek = d3.timeDay.range(this.props.selectedWeek,
       d3.timeWeek.offset(this.props.selectedWeek, 1));
@@ -125,7 +123,7 @@ class Day extends Component {
       .classed('day', true)
       .attr('transform', d => 'translate(' + [d.x, d.y] + ')');
     enter.append('rect')
-      // .attr('fill-opacity', 0.75);
+      .attr('fill', d => d.fill);
     enter.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')

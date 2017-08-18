@@ -6,7 +6,8 @@ var height = 650;
 var dayWidth = 55;
 var dayHeight = 75;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
-var radius = 7;
+var radius = 8;
+var fontSize = 14;
 
 // d3 functions
 var xScale = d3.scaleLinear().domain([0, 6]);
@@ -31,6 +32,7 @@ class App extends Component {
     this.dragStart = this.dragStart.bind(this);
     this.dragExpense = this.dragExpense.bind(this);
     this.dragEnd = this.dragEnd.bind(this);
+    this.mouseOver = this.mouseOver.bind(this);
   }
 
   componentWillMount() {
@@ -42,7 +44,20 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.container = d3.select(this.refs.container);
+    this.container = d3.select(this.refs.container).append('g');
+    this.hover = d3.select(this.refs.container).append('g');
+    this.hover.append('rect')
+      .attr('height', fontSize + 4)
+      .attr('y', -fontSize / 2 - 2)
+      .attr('opacity', 0.85)
+      .attr('fill', this.props.colors.white);
+    this.hover.append('text')
+      .attr('text-anchor', 'middle')
+      .attr('dy', '.35em')
+      .attr('fill', this.props.colors.black)
+      .style('font-size', fontSize)
+      .style('pointer-events', 'none');
+
     this.calculateData();
     this.renderCircles();
 
@@ -122,6 +137,8 @@ class App extends Component {
       .attr('fill', this.props.colors.white)
       .style('cursor', 'move')
       .call(drag)
+      .on('mouseover', this.mouseOver)
+      .on('mouseleave', () => this.hover.style('display', 'none'))
       .merge(this.circles)
       .attr('r', d => d.radius);
   }
@@ -132,6 +149,9 @@ class App extends Component {
   }
 
   dragStart() {
+    this.dragging = true;
+    this.hover.style('display', 'none')
+
     simulation.alphaTarget(0.3).restart();
     d3.event.subject.fx = d3.event.subject.x;
     d3.event.subject.fy = d3.event.subject.y;
@@ -178,6 +198,21 @@ class App extends Component {
       }
     }
     this.dragged = null;
+    this.dragging = false;
+  }
+
+  mouseOver(d) {
+    if (this.dragging) return;
+    this.hover.style('display', 'block');
+
+    var {x, y, name} = d;
+    this.hover.attr('transform', 'translate(' + [x, y + d.radius + fontSize] + ')');
+    this.hover.select('text')
+      .text(_.map(name.split(' '), _.capitalize).join(' '));
+    var width = this.hover.select('text').node().getBoundingClientRect().width;
+    this.hover.select('rect')
+      .attr('width', width + 6)
+      .attr('x', -width / 2 - 3);
   }
 
   render() {

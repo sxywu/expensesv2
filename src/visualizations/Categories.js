@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import _ from 'lodash';
+import chroma from 'chroma-js';
 
-var radiusScale = d3.scaleLinear().range([15, 50]);
+var height = 600;
+var radius = 55;
+var white = '#fff8fa';
+
+var amountScale = d3.scaleLog();
+var colorScale = chroma.scale(['#53c3ac', '#f7e883', '#e85178']);
 var simulation = d3.forceSimulation()
   .alphaDecay(0.001)
   .velocityDecay(0.3)
@@ -10,7 +16,6 @@ var simulation = d3.forceSimulation()
   .force('x', d3.forceX(d => d.focusX))
   .force('y', d3.forceY(d => d.focusY))
   .stop();
-var height = 600;
 
 class App extends Component {
 
@@ -40,15 +45,24 @@ class App extends Component {
   }
 
   calculateData() {
-    // calculate domain for radius (total $ amount of expenses)
-    var radiusExtent = d3.extent(this.props.categories, category => category.total);
-    radiusScale.domain(radiusExtent);
+    var totalsByDay = _.chain(this.props.expenses)
+      .groupBy(d => d3.timeDay.floor(d.date))
+      .map(expenses => _.sumBy(expenses, 'amount'))
+      .value();
+    // get min+max total amounts per day
+    var totalsExtent = d3.extent(_.values(totalsByDay));
+    amountScale.domain(totalsExtent);
 
     this.categories = _.map(this.props.categories, category => {
+      var x = this.props.width / 2;
+      var y = height / 3;
       return Object.assign(category, {
-        radius: radiusScale(category.total),
-        focusX: this.props.width / 2,
-        focusY: height / 4,
+        fill: colorScale(amountScale(category.total)),
+        radius,
+        focusX: x,
+        focusY: y,
+        x: category.x || x,
+        y: category.y || y,
       });
     });
   }
@@ -67,6 +81,7 @@ class App extends Component {
   }
 
   renderCircles() {
+    var t = d3.transition().duration(500);
     // update
     this.circles = this.container.selectAll('g')
       .data(this.categories);
@@ -77,17 +92,19 @@ class App extends Component {
     // enter
     var enter = this.circles.enter().append('g');
     enter.append('circle')
-      .attr('fill', '#fff')
-      .attr('stroke', '#666')
+      .attr('r', radius)
       .attr('stroke-width', 2);
     enter.append('text')
       .attr('text-anchor', 'middle')
-      .attr('dy', '.35em');
+      .attr('dy', '.35em')
+      .attr('fill', white)
+      .attr('font-size', 14);
 
     // enter + update selection
     this.circles = enter.merge(this.circles);
     this.circles.select('circle')
-      .attr('r', d => d.radius);
+      .transition(t)
+      .attr('fill', d => d.fill);
     this.circles.select('text')
       .text(d => d.name);
   }

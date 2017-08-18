@@ -55,17 +55,15 @@ class App extends Component {
 
     var width = this.props.width;
     this.categories = _.map(this.props.categories, category => {
-      var x = this.props.width / 2;
-      var y = height / 3;
       var fill = category.total ?
         colorScale(amountScale(category.total)) : this.props.colors.gray;
       return Object.assign(category, {
         fill,
         radius,
-        focusX: x,
-        focusY: y,
-        x: category.x || x,
-        y: category.y || y,
+        focusX: width / 2,
+        focusY: height / 3,
+        x: category.x || _.random(0.25 * width, 0.75 * width),
+        y: category.y || _.random(0.25 * height, 0.5 * height),
       });
     });
   }

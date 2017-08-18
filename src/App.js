@@ -10,6 +10,11 @@ import expensesData from './data/expenses.json';
 
 var width = 750;
 var height = 1800;
+var colors = {
+  white: '#fff8fa',
+  gray: '#e1ecea',
+  black: '#516561',
+};
 
 class App extends Component {
 
@@ -100,6 +105,7 @@ class App extends Component {
     var props = {
       width,
       links,
+      colors,
       linkToCategory: this.linkToCategory,
       editDate: this.editDate,
     };

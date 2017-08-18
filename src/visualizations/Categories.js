@@ -53,11 +53,14 @@ class App extends Component {
     var totalsExtent = d3.extent(_.values(totalsByDay));
     amountScale.domain(totalsExtent);
 
+    var width = this.props.width;
     this.categories = _.map(this.props.categories, category => {
       var x = this.props.width / 2;
       var y = height / 3;
+      var fill = category.total ?
+        colorScale(amountScale(category.total)) : this.props.colors.gray;
       return Object.assign(category, {
-        fill: colorScale(amountScale(category.total)),
+        fill,
         radius,
         focusX: x,
         focusY: y,
@@ -76,7 +79,8 @@ class App extends Component {
 
     // enter + update
     this.lines = this.lines.enter().insert('line', 'g')
-      .attr('stroke', '#666')
+      .attr('stroke', this.props.colors.black)
+      .attr('stroke-width', 2)
       .merge(this.lines);
   }
 

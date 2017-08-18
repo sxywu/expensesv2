@@ -8,7 +8,6 @@ var height = 650;
 var dayWidth = 55;
 var dayHeight = 75;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
-var white = '#fff8fa';
 
 // d3 functions
 var xScale = d3.scaleLinear().domain([0, 6]);
@@ -104,7 +103,7 @@ class Day extends Component {
       .attr('height', 2 * dayHeight)
       .attr('x', -dayWidth)
       .attr('y', -dayHeight)
-      .attr('fill', '#e1ecea');
+      .attr('fill', this.props.colors.gray);
   }
 
   renderDays() {
@@ -126,7 +125,7 @@ class Day extends Component {
     enter.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
-      .attr('fill', white)
+      .attr('fill', this.props.colors.white)
       .style('font-family', 'CatMule Caps')
       .style('font-size', fontSize);
 

@@ -6,8 +6,7 @@ var height = 650;
 var dayWidth = 55;
 var dayHeight = 75;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
-var radius = 8;
-var white = '#fff8fa';
+var radius = 7;
 
 // d3 functions
 var xScale = d3.scaleLinear().domain([0, 6]);
@@ -120,7 +119,7 @@ class App extends Component {
     // enter+update
     this.circles = this.circles.enter().append('circle')
       .classed('expense', true)
-      .attr('fill', white)
+      .attr('fill', this.props.colors.white)
       .call(drag)
       .merge(this.circles)
       .attr('r', d => d.radius);

@@ -120,6 +120,7 @@ class App extends Component {
     this.circles = this.circles.enter().append('circle')
       .classed('expense', true)
       .attr('fill', this.props.colors.white)
+      .style('cursor', 'move')
       .call(drag)
       .merge(this.circles)
       .attr('r', d => d.radius);

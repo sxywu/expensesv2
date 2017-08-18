@@ -93,11 +93,13 @@ class App extends Component {
     var enter = this.circles.enter().append('g');
     enter.append('circle')
       .attr('r', radius)
-      .attr('stroke-width', 2);
+      .attr('stroke-width', 2)
+      .style('cursor', 'move');
     enter.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
-      .attr('font-size', 14);
+      .attr('font-size', 14)
+      .style('pointer-events', 'none');
 
     // enter + update selection
     this.circles = enter.merge(this.circles);

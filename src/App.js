@@ -114,9 +114,9 @@ class App extends Component {
     return (
       <div className='App' style={style}>
         <h1 style={{textAlign: 'center'}}>
-          <span onClick={this.prevWeek}>← </span>
+          <span style={{cursor: 'pointer'}} onClick={this.prevWeek}>← </span>
           Week of {selectedWeek}
-          <span onClick={this.nextWeek}> →</span>
+          <span style={{cursor: 'pointer'}}  onClick={this.nextWeek}> →</span>
         </h1>
         <svg style={{overflow: 'visible'}} width={width} height={height}>
           <Day {...props} {...this.state} />

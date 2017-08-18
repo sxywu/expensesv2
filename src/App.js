@@ -25,6 +25,7 @@ class App extends Component {
       categories: [
         {name: 'Groceries', expenses: [], total: 0},
         {name: 'Restaurants', expenses: [], total: 0},
+        {name: 'Travel', expenses: [], total: 0},
       ],
       selectedWeek: null,
     };
@@ -112,11 +113,11 @@ class App extends Component {
 
     return (
       <div className='App' style={style}>
-        <h2 style={{textAlign: 'center'}}>
+        <h1 style={{textAlign: 'center'}}>
           <span onClick={this.prevWeek}>← </span>
           Week of {selectedWeek}
           <span onClick={this.nextWeek}> →</span>
-        </h2>
+        </h1>
         <svg style={{overflow: 'visible'}} width={width} height={height}>
           <Day {...props} {...this.state} />
           <Categories {...props} {...this.state} />

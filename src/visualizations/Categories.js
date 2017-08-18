@@ -81,16 +81,17 @@ class App extends Component {
   }
 
   renderLinks() {
-    this.lines = this.container.selectAll('line')
-      .data(this.props.links);
+    this.lines = this.container.selectAll('path')
+      .data(this.links);
 
     // exit
     this.lines.exit().remove();
 
     // enter + update
-    this.lines = this.lines.enter().insert('line', 'g')
+    this.lines = this.lines.enter().insert('path', 'g')
       .attr('stroke', this.props.colors.black)
-      .attr('stroke-width', 2)
+      .attr('stroke-width', 0.5)
+      .attr('fill', 'none')
       .merge(this.lines);
   }
 
@@ -128,10 +129,17 @@ class App extends Component {
 
   forceTick() {
     this.circles.attr('transform', d => 'translate(' + [d.x, d.y] + ')');
-    this.lines.attr('x1', d => d.source.x)
-      .attr('x2', d => d.target.x)
-      .attr('y1', d => d.source.y)
-      .attr('y2', d => d.target.y);
+    this.lines
+      .attr('transform', d => {
+        var angle = Math.atan2(d.target.y - d.source.y, d.target.x - d.source.x);
+        angle *= (180 / Math.PI);
+        return'translate(' + [d.source.x, d.source.y] + ')rotate(' + angle + ')';
+      }).attr('d', d => {
+        var direction = d.source.date.getDay() < 3 ? -1 : 1;
+        // calculate distance between source and target
+        var dist = Math.sqrt(Math.pow(d.target.x - d.source.x, 2) + Math.pow(d.target.y - d.source.y, 2));
+        return 'M0,0 Q' + [dist / 2, direction * dist / 3] + ' ' + [dist, 0];
+      });
   }
 
   render() {

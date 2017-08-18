@@ -108,7 +108,7 @@ class App extends Component {
     var enter = this.circles.enter().append('g');
     enter.append('circle')
       .attr('r', radius)
-      .attr('stroke-width', 2)
+      .attr('stroke-width', 1)
       .style('cursor', 'move');
     enter.append('text')
       .attr('text-anchor', 'middle')
@@ -120,6 +120,7 @@ class App extends Component {
     this.circles = enter.merge(this.circles);
     this.circles.select('circle')
       .transition(t)
+      .attr('stroke', d => d.total ? this.props.colors.black : this.props.colors.gray)
       .attr('fill', d => d.total ? d.fill : this.props.colors.gray);
     this.circles.select('text')
       .text(d => d.name)

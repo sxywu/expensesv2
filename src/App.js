@@ -23,9 +23,9 @@ class App extends Component {
     this.state = {
       expenses: [],
       categories: [
-        {name: 'Groceries', expenses: [], total: 0},
         {name: 'Restaurants', expenses: [], total: 0},
         {name: 'Travel', expenses: [], total: 0},
+        {name: 'Dessert', expenses: [], total: 0},
       ],
       selectedWeek: null,
     };
@@ -45,6 +45,7 @@ class App extends Component {
           amount: -d.Amount,
           name: d.Description,
           date: new Date(d['Trans Date']),
+          categories: 0,
         }
       }).value();
 
@@ -69,8 +70,10 @@ class App extends Component {
   linkToCategory(expense, category) {
     if (_.includes(category.expenses, expense)) {
       category.expenses = _.without(category.expenses, expense);
+      expense.categories -= 1;
     } else {
       category.expenses.push(expense);
+      expense.categories += 1;
     }
     this.forceUpdate();
   }

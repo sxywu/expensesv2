@@ -140,7 +140,8 @@ class App extends Component {
       .on('mouseover', this.mouseOver)
       .on('mouseleave', () => this.hover.style('display', 'none'))
       .merge(this.circles)
-      .attr('r', d => d.radius);
+      .attr('r', d => d.radius)
+      .attr('stroke', d => d.categories ? this.props.colors.black : '');
   }
 
   forceTick() {

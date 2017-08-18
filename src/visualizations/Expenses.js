@@ -6,13 +6,13 @@ var height = 650;
 var dayWidth = 55;
 var dayHeight = 75;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
-var radius = 5;
+var radius = 8;
 var white = '#fff8fa';
 
 // d3 functions
 var xScale = d3.scaleLinear().domain([0, 6]);
 var yScale = d3.scaleLinear().range([height - margin.bottom, margin.top]);
-var amountScale = d3.scaleLinear().range([radius, 4 * radius]);
+var amountScale = d3.scaleLinear().range([radius, 3 * radius]);
 var simulation = d3.forceSimulation()
   .alphaDecay(0.001)
   .velocityDecay(0.3)

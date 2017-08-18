@@ -55,10 +55,8 @@ class App extends Component {
 
     var width = this.props.width;
     this.categories = _.map(this.props.categories, category => {
-      var fill = category.total ?
-        colorScale(amountScale(category.total)) : this.props.colors.gray;
       return Object.assign(category, {
-        fill,
+        fill: colorScale(amountScale(category.total)),
         radius,
         focusX: width / 2,
         focusY: height / 3,
@@ -99,16 +97,17 @@ class App extends Component {
     enter.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
-      .attr('fill', white)
       .attr('font-size', 14);
 
     // enter + update selection
     this.circles = enter.merge(this.circles);
     this.circles.select('circle')
       .transition(t)
-      .attr('fill', d => d.fill);
+      .attr('fill', d => d.total ? d.fill : this.props.colors.gray);
     this.circles.select('text')
-      .text(d => d.name);
+      .text(d => d.name)
+      .transition(t)
+      .attr('fill', d => d.total ? this.props.colors.white : this.props.colors.black);
   }
 
   forceTick() {

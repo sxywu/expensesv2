@@ -82,30 +82,12 @@ class App extends Component {
 
   render() {
     var selectedWeek = d3.timeFormat('%B %d, %Y')(this.state.selectedWeek);
-    var links = [];
-    _.each(this.state.categories, category => {
-      // update category total correctly
-      category.total = 0;
-      _.each(category.expenses, expense => {
-        // only when category's expense is in the selected week
-        if (d3.timeWeek.floor(expense.date).getTime() === this.state.selectedWeek.getTime()) {
-          // then we give it a visual link
-          links.push({
-            source: expense,
-            target: category,
-          });
-          category.total += expense.amount;
-        }
-      });
-    });
-
     var style = {
       width,
       margin: 'auto',
     }
     var props = {
       width,
-      links,
       colors,
       linkToCategory: this.linkToCategory,
       editDate: this.editDate,

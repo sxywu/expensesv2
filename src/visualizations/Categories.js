@@ -54,9 +54,23 @@ class App extends Component {
     amountScale.domain(totalsExtent);
 
     var width = this.props.width;
+    this.links = [];
     this.categories = _.map(this.props.categories, category => {
+      var total = 0;
+      _.chain(category.expenses)
+        .filter(expense => d3.timeWeek.floor(expense.date).getTime() ===
+          this.props.selectedWeek.getTime())
+        .each(expense => {
+          total += expense.amount;
+          this.links.push({
+            source: expense,
+            target: category,
+          });
+        }).value();
+
       return Object.assign(category, {
-        fill: colorScale(amountScale(category.total)),
+        total,
+        fill: colorScale(amountScale(total)),
         radius,
         focusX: width / 2,
         focusY: height / 3,

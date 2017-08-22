@@ -34,14 +34,16 @@ class App extends Component {
     this.nextWeek = this.nextWeek.bind(this);
     this.linkToCategory = this.linkToCategory.bind(this);
     this.editDate = this.editDate.bind(this);
+    this.addCategory = this.addCategory.bind(this);
   }
 
   componentWillMount() {
     // process data
     var expenses = _.chain(expensesData)
       .filter(d => d.Amount < 0)
-      .map(d => {
+      .map((d, i) => {
         return {
+          id: i,
           amount: -d.Amount,
           name: d.Description,
           date: new Date(d['Trans Date']),
@@ -83,6 +85,21 @@ class App extends Component {
     this.forceUpdate();
   }
 
+  addCategory(event) {
+    var ENTER_CODE = 13;
+    if (event.charCode === ENTER_CODE) {
+      // take the value of the input and create new category
+      var category = {
+        name: event.target.value,
+        expenses: [],
+        total: 0,
+      }
+      var categories = this.state.categories;
+      categories.push(category);
+      this.setState({categories});
+    }
+  }
+
   render() {
     var selectedWeek = d3.timeFormat('%B %d, %Y')(this.state.selectedWeek);
     var style = {
@@ -98,7 +115,10 @@ class App extends Component {
 
     return (
       <div className='App' style={style}>
-        <h1 style={{textAlign: 'center'}}>
+        <h2>Add category</h2>
+        <input type='text' onKeyPress={this.addCategory}></input>
+
+        <h1 style={{textAlign: 'center', color: colors.black}}>
           <span style={{cursor: 'pointer'}} onClick={this.prevWeek}>← </span>
           Week of {selectedWeek}
           <span style={{cursor: 'pointer'}}  onClick={this.nextWeek}> →</span>

@@ -37,7 +37,6 @@ class App extends Component {
     this.editDate = this.editDate.bind(this);
     this.addCategory = this.addCategory.bind(this);
     this.startCategory = this.startCategory.bind(this);
-    this.clearCategory = this.clearCategory.bind(this);
   }
 
   componentWillMount() {
@@ -97,14 +96,14 @@ class App extends Component {
     this.setState({categoryBeingAdded: category});
   }
 
-  clearCategory(event) {
-    event.target.value = '';
-    this.setState({categoryBeingAdded: null});
-  }
-
   addCategory(event) {
     var ENTER_CODE = 13;
-    if (event.charCode === ENTER_CODE) {
+    var ESC_CODE = 27;
+    if (event.keyCode === ESC_CODE) {
+      event.target.value = '';
+      event.target.blur();
+      this.setState({categoryBeingAdded: null});
+    } else if (event.keyCode === ENTER_CODE) {
       // take the value of the input and create new category
       var category = Object.assign(this.state.categoryBeingAdded, {
         name: event.target.value,
@@ -147,8 +146,7 @@ class App extends Component {
       <div className='App' style={style}>
         <div style={{textAlign: 'center'}}>
           <h2>Add category</h2>
-          <input type='text' onFocus={this.startCategory} onBlur={this.clearCategory}
-            onKeyPress={this.addCategory}></input>
+          <input type='text' onFocus={this.startCategory} onKeyDown={this.addCategory}></input>
         </div>
         <h1 style={{textAlign: 'center', color: colors.black}}>
           <span style={{cursor: 'pointer'}} onClick={this.prevWeek}>← </span>

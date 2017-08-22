@@ -34,7 +34,7 @@ class App extends Component {
     this.renderLinks();
     this.renderCircles();
 
-    simulation.nodes(this.props.categories).alpha(0.9).restart();
+    simulation.nodes(this.categories).alpha(0.9).restart();
   }
 
   componentDidUpdate() {
@@ -42,7 +42,7 @@ class App extends Component {
     this.renderLinks();
     this.renderCircles();
 
-    simulation.nodes(this.props.categories).alpha(0.9).restart();
+    simulation.nodes(this.categories).alpha(0.9).restart();
   }
 
   calculateData() {
@@ -56,6 +56,7 @@ class App extends Component {
 
     var width = this.props.width;
     this.links = [];
+    // calculate existing categories
     this.categories = _.map(this.props.categories, category => {
       var total = 0;
       _.chain(category.expenses)
@@ -79,6 +80,15 @@ class App extends Component {
         y: category.y || _.random(0.25 * height, 0.5 * height),
       });
     });
+    // if a category is currently being added, include that also
+    if (this.props.categoryBeingAdded) {
+      this.categories.push(Object.assign(this.props.categoryBeingAdded, {
+        fx: this.props.width / 2,
+        fy: 80,
+        radius,
+      }));
+    }
+
   }
 
   renderLinks() {

@@ -27,6 +27,7 @@ class App extends Component {
         {name: 'Travel', expenses: [], total: 0},
         {name: 'Dessert', expenses: [], total: 0},
       ],
+      categoryBeingAdded: null,
       selectedWeek: null,
     };
 
@@ -35,6 +36,7 @@ class App extends Component {
     this.linkToCategory = this.linkToCategory.bind(this);
     this.editDate = this.editDate.bind(this);
     this.addCategory = this.addCategory.bind(this);
+    this.startCategory = this.startCategory.bind(this);
   }
 
   componentWillMount() {
@@ -85,6 +87,15 @@ class App extends Component {
     this.forceUpdate();
   }
 
+  startCategory(event) {
+    var category = {
+      name: event.target.value,
+      expenses: [],
+      total: 0,
+    }
+    this.setState({categoryBeingAdded: category});
+  }
+
   addCategory(event) {
     var ENTER_CODE = 13;
     if (event.charCode === ENTER_CODE) {
@@ -125,7 +136,8 @@ class App extends Component {
       <div className='App' style={style}>
         <div style={{textAlign: 'center'}}>
           <h2>Add category</h2>
-          <input type='text' onKeyPress={this.addCategory}></input>
+          <input type='text' onFocus={this.startCategory}
+            onKeyPress={this.addCategory}></input>
         </div>
         <h1 style={{textAlign: 'center', color: colors.black}}>
           <span style={{cursor: 'pointer'}} onClick={this.prevWeek}>← </span>

@@ -7,6 +7,7 @@ import chroma from 'chroma-js';
 var height = 650;
 var dayWidth = 55;
 var dayHeight = 75;
+var topPadding = 150;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
 
 // d3 functions
@@ -89,6 +90,7 @@ class Day extends Component {
       var offset = Math.abs(3 - dayOfWeek);
       y = height - 2 * dayHeight - 0.5 * offset * dayHeight;
     }
+    y += topPadding;
 
     return {x, y};
   }

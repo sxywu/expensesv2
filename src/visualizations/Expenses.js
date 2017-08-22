@@ -6,6 +6,7 @@ var height = 650;
 var dayWidth = 55;
 var dayHeight = 75;
 var margin = {left: 40, top: 20, right: 40, bottom: 20};
+var topPadding = 150;
 var radius = 8;
 var fontSize = 14;
 
@@ -119,6 +120,7 @@ class App extends Component {
       var offset = Math.abs(3 - dayOfWeek);
       y = height - 2 * dayHeight - 0.5 * offset * dayHeight;
     }
+    y += topPadding;
 
     return {x, y};
   }

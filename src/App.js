@@ -106,6 +106,14 @@ class App extends Component {
       width,
       margin: 'auto',
     }
+    var svgStyle = {
+      overflow: 'visible',
+      position: 'absolute',
+      top: 0,
+      width,
+      height,
+      zIndex: -1,
+    }
     var props = {
       width,
       colors,
@@ -115,15 +123,16 @@ class App extends Component {
 
     return (
       <div className='App' style={style}>
-        <h2>Add category</h2>
-        <input type='text' onKeyPress={this.addCategory}></input>
-
+        <div style={{textAlign: 'center'}}>
+          <h2>Add category</h2>
+          <input type='text' onKeyPress={this.addCategory}></input>
+        </div>
         <h1 style={{textAlign: 'center', color: colors.black}}>
           <span style={{cursor: 'pointer'}} onClick={this.prevWeek}>← </span>
           Week of {selectedWeek}
           <span style={{cursor: 'pointer'}}  onClick={this.nextWeek}> →</span>
         </h1>
-        <svg style={{overflow: 'visible'}} width={width} height={height}>
+        <svg style={svgStyle}>
           <Day {...props} {...this.state} />
           <Categories {...props} {...this.state} />
           <Expenses {...props} {...this.state} />

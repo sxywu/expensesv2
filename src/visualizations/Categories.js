@@ -4,6 +4,7 @@ import _ from 'lodash';
 import chroma from 'chroma-js';
 
 var height = 600;
+var topPadding = 150;
 var radius = 55;
 var white = '#fff8fa';
 
@@ -73,7 +74,7 @@ class App extends Component {
         fill: colorScale(amountScale(total)),
         radius,
         focusX: width / 2,
-        focusY: height / 3,
+        focusY: height / 3 + topPadding,
         x: category.x || _.random(0.25 * width, 0.75 * width),
         y: category.y || _.random(0.25 * height, 0.5 * height),
       });

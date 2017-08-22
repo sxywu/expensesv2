@@ -106,14 +106,19 @@ class App extends Component {
     var ENTER_CODE = 13;
     if (event.charCode === ENTER_CODE) {
       // take the value of the input and create new category
-      var category = {
+      var category = Object.assign(this.state.categoryBeingAdded, {
         name: event.target.value,
-        expenses: [],
-        total: 0,
-      }
+        fx: null,
+        fy: null,
+      });
       var categories = this.state.categories;
       categories.push(category);
-      this.setState({categories});
+
+      // clear out the input form on successful submit
+      event.target.value = '';
+      event.target.blur();
+
+      this.setState({categories, categoryBeingAdded: null});
     }
   }
 

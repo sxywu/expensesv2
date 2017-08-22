@@ -37,6 +37,7 @@ class App extends Component {
     this.editDate = this.editDate.bind(this);
     this.addCategory = this.addCategory.bind(this);
     this.startCategory = this.startCategory.bind(this);
+    this.clearCategory = this.clearCategory.bind(this);
   }
 
   componentWillMount() {
@@ -96,6 +97,11 @@ class App extends Component {
     this.setState({categoryBeingAdded: category});
   }
 
+  clearCategory(event) {
+    event.target.value = '';
+    this.setState({categoryBeingAdded: null});
+  }
+
   addCategory(event) {
     var ENTER_CODE = 13;
     if (event.charCode === ENTER_CODE) {
@@ -136,7 +142,7 @@ class App extends Component {
       <div className='App' style={style}>
         <div style={{textAlign: 'center'}}>
           <h2>Add category</h2>
-          <input type='text' onFocus={this.startCategory}
+          <input type='text' onFocus={this.startCategory} onBlur={this.clearCategory}
             onKeyPress={this.addCategory}></input>
         </div>
         <h1 style={{textAlign: 'center', color: colors.black}}>

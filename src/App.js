@@ -37,6 +37,7 @@ class App extends Component {
     this.editDate = this.editDate.bind(this);
     this.addCategory = this.addCategory.bind(this);
     this.startCategory = this.startCategory.bind(this);
+    this.deleteCategory = this.deleteCategory.bind(this);
   }
 
   componentWillMount() {
@@ -121,6 +122,11 @@ class App extends Component {
     }
   }
 
+  deleteCategory(category) {
+    var categories = _.filter(this.state.categories, d => d.name !== category.name);
+    this.setState({categories});
+  }
+
   render() {
     var selectedWeek = d3.timeFormat('%B %d, %Y')(this.state.selectedWeek);
     var style = {
@@ -140,6 +146,7 @@ class App extends Component {
       colors,
       linkToCategory: this.linkToCategory,
       editDate: this.editDate,
+      deleteCategory: this.deleteCategory,
     };
 
     return (

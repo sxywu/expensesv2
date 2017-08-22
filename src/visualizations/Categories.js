@@ -7,6 +7,8 @@ var height = 600;
 var topPadding = 150;
 var radius = 55;
 var white = '#fff8fa';
+var deleteIconY = 150;
+var deleteIconRadius = 30;
 
 var amountScale = d3.scaleLog();
 var colorScale = chroma.scale(['#53c3ac', '#f7e883', '#e85178']);
@@ -17,6 +19,7 @@ var simulation = d3.forceSimulation()
   .force('x', d3.forceX(d => d.focusX))
   .force('y', d3.forceY(d => d.focusY))
   .stop();
+var drag = d3.drag();
 
 class App extends Component {
 
@@ -25,11 +28,24 @@ class App extends Component {
     this.state = {};
 
     this.forceTick = this.forceTick.bind(this);
+    this.dragStart = this.dragStart.bind(this);
+    this.dragExpense = this.dragExpense.bind(this);
+    this.dragEnd = this.dragEnd.bind(this);
+
     simulation.on('tick', this.forceTick);
+    drag.on('start', this.dragStart)
+      .on('drag', this.dragExpense)
+      .on('end', this.dragEnd);
   }
 
   componentDidMount() {
     this.container = d3.select(this.refs.container);
+    this.deleteIcon = this.container.append('circle')
+      .attr('cx', this.props.width / 2)
+      .attr('cy', deleteIconY)
+      .attr('r', deleteIconRadius)
+      .style('display', 'none');
+
     this.calculateData();
     this.renderLinks();
     this.renderCircles();
@@ -120,7 +136,8 @@ class App extends Component {
     enter.append('circle')
       .attr('r', radius)
       .attr('stroke-width', 1)
-      .style('cursor', 'move');
+      .style('cursor', 'move')
+      .call(drag);
     enter.append('text')
       .attr('text-anchor', 'middle')
       .attr('dy', '.35em')
@@ -153,6 +170,38 @@ class App extends Component {
         return 'M0,0 Q' + [dist / 2, direction * dist / 3] + ' ' + [dist, 0];
       });
   }
+
+  dragStart() {
+    simulation.alphaTarget(0.3).restart();
+    d3.event.subject.fx = d3.event.subject.x;
+    d3.event.subject.fy = d3.event.subject.y;
+
+    this.deleteIcon.style('display', 'block');
+  }
+
+  dragExpense() {
+    d3.event.subject.fx = d3.event.x;
+    d3.event.subject.fy = d3.event.y;
+  }
+
+  dragEnd() {
+    if (!d3.event.active) simulation.alphaTarget(0);
+    d3.event.subject.fx = null;
+    d3.event.subject.fy = null;
+
+    this.deleteIcon.style('display', 'none');
+
+    // if dragged over the deleteIcon
+    var categoryX = d3.event.x;
+    var categoryY = d3.event.y;
+    if (this.props.width / 2 - deleteIconRadius < categoryX &&
+      categoryX < this.props.width / 2 + deleteIconRadius &&
+      deleteIconY - deleteIconRadius < categoryY &&
+      categoryY < deleteIconY + deleteIconRadius) {
+      this.props.deleteCategory(d3.event.subject);
+    }
+  }
+
 
   render() {
     return (

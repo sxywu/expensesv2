@@ -37,6 +37,7 @@ class App extends Component {
     this.editDate = this.editDate.bind(this);
     this.addCategory = this.addCategory.bind(this);
     this.startCategory = this.startCategory.bind(this);
+    this.clearCategory = this.clearCategory.bind(this);
     this.deleteCategory = this.deleteCategory.bind(this);
   }
 
@@ -97,13 +98,17 @@ class App extends Component {
     this.setState({categoryBeingAdded: category});
   }
 
+  clearCategory(event) {
+    event.target.value = '';
+    event.target.blur();
+    this.setState({categoryBeingAdded: null});
+  }
+
   addCategory(event) {
     var ENTER_CODE = 13;
     var ESC_CODE = 27;
     if (event.keyCode === ESC_CODE) {
-      event.target.value = '';
-      event.target.blur();
-      this.setState({categoryBeingAdded: null});
+      this.clearCategory(event);
     } else if (event.keyCode === ENTER_CODE) {
       // take the value of the input and create new category
       var category = Object.assign(this.state.categoryBeingAdded, {
@@ -169,7 +174,7 @@ class App extends Component {
           <span style={{cursor: 'pointer'}}  onClick={this.nextWeek}> →</span>
         </h1>
         <input id='addCategory' style={inputStyle} type='text' placeholder='Add Category'
-          onFocus={this.startCategory} onKeyDown={this.addCategory}></input>
+          onFocus={this.startCategory} onBlur={this.clearCategory} onKeyDown={this.addCategory}></input>
         <svg style={svgStyle}>
           <Day {...props} {...this.state} />
           <Categories {...props} {...this.state} />

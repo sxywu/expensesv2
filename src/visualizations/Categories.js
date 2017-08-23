@@ -2,13 +2,14 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import _ from 'lodash';
 import chroma from 'chroma-js';
+import deleteIconSrc from '../images/delete.svg';
 
 var height = 600;
 var topPadding = 150;
 var radius = 55;
 var white = '#fff8fa';
-var deleteIconY = 150;
-var deleteIconRadius = 30;
+var deleteIconY = 160;
+var deleteIconRadius = 24;
 
 var amountScale = d3.scaleLog();
 var colorScale = chroma.scale(['#53c3ac', '#f7e883', '#e85178']);
@@ -40,10 +41,14 @@ class App extends Component {
 
   componentDidMount() {
     this.container = d3.select(this.refs.container);
-    this.deleteIcon = this.container.append('circle')
-      .attr('cx', this.props.width / 2)
-      .attr('cy', deleteIconY)
-      .attr('r', deleteIconRadius)
+    // create delete icon
+    this.deleteIcon = this.container.append('image')
+      .attr('x', this.props.width / 2 - deleteIconRadius)
+      .attr('y', deleteIconY - deleteIconRadius)
+      .attr('width', 2 * deleteIconRadius)
+      .attr('height', 2 * deleteIconRadius)
+      .attr('xlink:href', deleteIconSrc)
+      .attr('fill', this.props.colors.black)
       .style('display', 'none');
 
     this.calculateData();

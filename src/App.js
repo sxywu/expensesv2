@@ -141,6 +141,18 @@ class App extends Component {
       height,
       zIndex: -1,
     }
+    var inputStyle = {
+      fontSize: 14,
+      textAlign: 'center',
+      display: 'block',
+      padding: 5,
+      width: 200,
+      margin: 'auto',
+      background: 'none',
+      color: colors.black,
+      border: 'none',
+      borderBottom: '2px solid ' + colors.black,
+    }
     var props = {
       width,
       colors,
@@ -151,15 +163,13 @@ class App extends Component {
 
     return (
       <div className='App' style={style}>
-        <div style={{textAlign: 'center'}}>
-          <h2>Add category</h2>
-          <input type='text' onFocus={this.startCategory} onKeyDown={this.addCategory}></input>
-        </div>
         <h1 style={{textAlign: 'center', color: colors.black}}>
           <span style={{cursor: 'pointer'}} onClick={this.prevWeek}>← </span>
           Week of {selectedWeek}
           <span style={{cursor: 'pointer'}}  onClick={this.nextWeek}> →</span>
         </h1>
+        <input id='addCategory' style={inputStyle} type='text' placeholder='Add Category'
+          onFocus={this.startCategory} onKeyDown={this.addCategory}></input>
         <svg style={svgStyle}>
           <Day {...props} {...this.state} />
           <Categories {...props} {...this.state} />

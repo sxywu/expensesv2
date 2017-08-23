@@ -25,3 +25,8 @@
 h1, h2, h3, h4, h5, h6 {
   font-family: 'CatMule Caps';
 }
+
+#addCategory:focus {
+  outline: none;
+  border-bottom: 2px solid #51aae8;
+}

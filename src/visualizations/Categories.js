@@ -100,7 +100,7 @@ class App extends Component {
     if (this.props.categoryBeingAdded) {
       this.categories.push(Object.assign(this.props.categoryBeingAdded, {
         fx: this.props.width / 2,
-        fy: 80,
+        fy: 100,
         radius,
       }));
     }
